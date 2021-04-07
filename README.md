@@ -14,7 +14,7 @@
   <img src="https://tokei.rs/b1/github/bittencourtthulio/safety4d?color=yellow&category=files">
 </p>
 
-# Router4Delphi
+# Safety4D
 Framework para Controle de Regras de Acesso do Usuários inspirado no conceito RBAC.
 
 ## Instalação
