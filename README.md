@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://github.com/bittencourtthulio/safety4d/blob/master/assets/logo.fw.png">
-    <img alt="router4d" src="https://github.com/bittencourtthulio/safety4d/blob/master/assets/logo.fw.png">
+  <a href="https://github.com/bittencourtthulio/safety4d/blob/main/assets/logo.fw.png">
+    <img alt="safety4d" src="https://github.com/bittencourtthulio/safety4d/blob/main/assets/logo.fw.png">
   </a>  
 </p>
 <br>
