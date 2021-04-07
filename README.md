@@ -15,7 +15,7 @@
 </p>
 
 # Safety4D
-Framework para Controle de Regras de Acesso do Usuários inspirado no conceito RBAC.
+Framework para Controle de Regras de Acesso de Usuários inspirado no conceito RBAC.
 
 ## Instalação
 
