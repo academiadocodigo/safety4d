@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{828C2011-D2F0-4E90-9828-5C6F0E3E803D}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Rbac4Delphi.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="samples\RbacSample.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Rbac4Delphi">
+        <MSBuild Projects="Rbac4Delphi.dproj"/>
+    </Target>
+    <Target Name="Rbac4Delphi:Clean">
+        <MSBuild Projects="Rbac4Delphi.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Rbac4Delphi:Make">
+        <MSBuild Projects="Rbac4Delphi.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RbacSample">
+        <MSBuild Projects="samples\RbacSample.dproj"/>
+    </Target>
+    <Target Name="RbacSample:Clean">
+        <MSBuild Projects="samples\RbacSample.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RbacSample:Make">
+        <MSBuild Projects="samples\RbacSample.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Rbac4Delphi;RbacSample"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Rbac4Delphi:Clean;RbacSample:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Rbac4Delphi:Make;RbacSample:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
