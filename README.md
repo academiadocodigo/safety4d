@@ -256,7 +256,7 @@ begin
     .validate;
  ```
 
-#### Exceptions
+### Exceptions
 
 A função validade retorna um boolean sinalizando se o acesso é permitido ou não, porém você pode tratar a permissão fazendo com que o TSafety4D dispare uma excessão com a mensagem do que falhou na validação, não necessitando assim de estrutura condicional para validar o acesso.
 
@@ -273,3 +273,56 @@ A função validade retorna um boolean sinalizando se o acesso é permitido ou n
     .validate;
  ```
 
+## Definindo as Configurações pelo Sistema
+
+```delphi
+TSafety4D
+  .New
+    .resources
+      .registerResources
+        .resourcesGroupName
+          .add('newapplication')
+          .providerName
+            .add('users')
+            .actions
+              .add('read')
+                .description('read-only')
+                .errormsg('not permit')
+              .&end
+              .add('write')
+                .description('read-write')
+                .errormsg('not write data')
+              .&end
+              .add('delete')
+                .description('delete-data')
+                .errormsg('not delete data')
+              .&end
+              .add('view')
+                .description('view data')
+                .errormsg('not view data')
+              .&end
+            .&end
+          .&end
+        .&end
+      .&end
+    .&end
+    .groupPermission
+      .groupRegister
+        .add('Operador')
+          .description('Funções de Operador do Sistema')
+          .actions
+            .add('users.view')
+          .&end
+          .notActions
+            .add('*')
+          .&end
+        .&end
+      .&end
+      .userKey
+        .registerUserKey
+          .add('Fulano de Tal')
+            .addPermission('{96B4C46F-0EBB-443B-B309-09C81844406E}')
+          .&end
+        .&end
+      .&end;
+```
