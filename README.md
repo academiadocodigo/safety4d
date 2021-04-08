@@ -221,9 +221,7 @@ No segundo grupo todas as <b>Actions</b> estão liberadas, exceto as que estão 
 begin
   aJson := TJSONObject.ParseJSONValue('SEU JSON') as TJsonObject;
   try
-    TSafety4D
-    .New
-      .LoadConfig(aJson);
+    TSafety4D.New.LoadConfig(aJson);
   finally
     aJson.Free;
   end;
