@@ -104,7 +104,6 @@ end;
 
 function TSafety4DValidation.validate: boolean;
 var
-  aTeste : String;
   FAllAcess : Boolean;
   FAllBlock : Boolean;
   iGroupPermission : iSafety4DGroupListActions;
@@ -118,7 +117,6 @@ begin
 
     for var UserPermission in FParent.userKey.getUserKeyPermissions(FuserKey) do
     begin
-      aTeste := UserPermission;
       iGroupPermission := FParent.groupPermission.getGroupPermission(UserPermission);
 
       for var aAction in iGroupPermission.actions.getActions do
@@ -136,7 +134,8 @@ begin
       for var aNotAction in iGroupPermission.notActions.getNotActions do
       begin
         if UpperCase(aNotAction) = UpperCase(FResource+'.'+FAction) then
-          raise Exception.Create('Access not allowed to these resources');
+          if FParent.configurations.exceptions then
+            raise Exception.Create('Access not allowed to these resources');
 
         if aNotAction = '*' then
           FAllBlock := True;
@@ -144,7 +143,8 @@ begin
 
       if not Result and FAllAcess then Result := FAllAcess;
       if not Result and FAllBlock then
-        raise Exception.Create('Access not allowed to these resources');
+        if FParent.configurations.exceptions then
+          raise Exception.Create('Access not allowed to these resources');
     end;
   except on e : Exception do
     raise Exception.Create(e.Message);

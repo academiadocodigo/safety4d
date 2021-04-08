@@ -43,11 +43,10 @@ function TSafety4DGroups.getGroups(
   var aJson: TJsonObject): iSafety4DGroup;
 var
   aJsonActions : TJsonArray;
-  aJsonGroups : TJsonObject;
   aJsonGroup : TJsonObject;
 begin
   Result := Self;
-  for var group in FgroupRegister.getGroupsRegisters do
+  for var group in groupRegister.getGroupsRegisters do
   begin
     aJson.AddPair(group.Key, TJsonObject.Create);
     aJsonGroup := aJson.GetValue<TJsonObject>(group.Key);

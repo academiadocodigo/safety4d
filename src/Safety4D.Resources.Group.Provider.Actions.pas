@@ -12,7 +12,6 @@ type
       [weak]
       FParent : iSafety4DResourcesGroupProvider;
       FActionList : TDictionary<string, iSafety4DResourcesGroupProviderActionsMsg>;
-      FActionsMsg : iSafety4DResourcesGroupProviderActionsMsg;
     public
       constructor Create(aParent : iSafety4DResourcesGroupProvider);
       destructor Destroy; override;

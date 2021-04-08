@@ -40,31 +40,43 @@ var
   iResourceActions : iSafety4DResourcesGroupProviderActions;
   iActionMessage : iSafety4DResourcesGroupProviderActionsMsg;
 begin
-  Result := False;
+  Result := True;
 
-  if not FRegisterResources.getResourceGroups.TryGetValue(aApplication, iResource) then
-    raise Exception.Create('Unregistered Application');
+  if not registerResources.getResourceGroups.TryGetValue(aApplication, iResource) then
+  begin
+    Result := False;
+    if FParent.configurations.exceptions then
+      raise Exception.Create('Unregistered Application');
+    exit;
+  end;
 
   if not iResource.getProviderNames.TryGetValue(aResource, iResourceActions) then
-    raise Exception.Create('Unregistered resource');
+  begin
+    Result := False;
+    if FParent.configurations.exceptions then
+      raise Exception.Create('Unregistered resource');
+    exit;
+  end;
 
   if not iResourceActions.getActions.TryGetValue(aAction, iActionMessage) then
-    raise Exception.Create('unregistered action');
+  begin
+    Result := False;
+    if FParent.configurations.exceptions then
+      raise Exception.Create('unregistered action');
+    exit;
+  end;
 end;
 
 function TSafety4DResources.getResource(
   var aJson: TJsonObject): iSafety4DResources;
 var
-  aJsonResources : TJsonObject;
   aJsonGroup : TJsonObject;
   aJsonProvider : TJsonObject;
   aJsonActions : TJsonObject;
 begin
   Result := Self;
-  //aJson.AddPair('resources', TJSONArray.Create.Add(TJSONObject.Create));
-  for var Resource in FRegisterResources.getResourceGroups do
+  for var Resource in registerResources.getResourceGroups do
   begin
-    //aJsonResources := (aJson.GetValue<TJsonArray>('resources').Items[0] as TJsonObject);
     aJson.AddPair(Resource.Key, TJSONObject.Create);
     for var Provider in Resource.Value.getProviderNames do
     begin

@@ -35,7 +35,7 @@ end;
 
 function TSafety4DResourcesRegister.getResourceGroups: TDictionary<string, iSafety4DResourcesGroupProvider>;
 begin
-  Result := FResourceGroupName.getResourcesGroupList;
+  Result := resourcesGroupName.getResourcesGroupList;
 end;
 
 constructor TSafety4DResourcesRegister.Create(aParent : iSafety4DResources);

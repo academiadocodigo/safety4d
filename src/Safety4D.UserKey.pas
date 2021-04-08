@@ -38,8 +38,13 @@ function TSafety4DUserKey.exists(aUserKey: String): Boolean;
 var
   iUser : iSafety4DUserKeyRegisterGroupPermission;
 begin
+  Result := True;
   if not FRegisterUserKey.GetUserKeyRegister.TryGetValue(aUserKey, iUser) then
-    raise Exception.Create('User key not registered');
+  begin
+    Result := False;
+    if FParent.configurations.exceptions then
+      raise Exception.Create('User key not registered');
+  end;
 end;
 
 function TSafety4DUserKey.getUserKey(var aJson: TJsonObject): iSafety4DUserKey;
@@ -47,7 +52,7 @@ var
   aJsonRegister : TJsonObject;
   aJsonPermission : TJsonArray;
 begin
-  for var userRegister in FRegisterUserKey.GetUserKeyRegister do
+  for var userRegister in registerUserKey.GetUserKeyRegister do
   begin
     aJson.AddPair(userRegister.Key, TJsonObject.Create);
     aJsonRegister := aJson.GetValue<TJsonObject>(userRegister.Key);

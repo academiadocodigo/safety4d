@@ -3,7 +3,9 @@ unit Safety4D;
 interface
 
 uses
-  Safety4D.Interfaces, System.JSON;
+  Safety4D.Interfaces,
+  System.JSON,
+  System.Generics.Collections;
 
 type
   TSafety4D = class(TInterfacedObject, iSafety4D)
@@ -12,6 +14,7 @@ type
       FGroupPermission : iSafety4DGroup;
       FuserKey : iSafety4DUserKey;
       FValidation : iSafety4DValidation;
+      FConfigurations : iSafety4DConfiguration;
       procedure __loadResourcesJson(var aJson : TJsonObject);
       procedure __loadGroupPermissionJson(var aJson : TJsonObject);
       procedure __loadUserKeysJson(var aJson : TJsonObject);
@@ -22,6 +25,7 @@ type
       function Validation : iSafety4DValidation;
       function resources : iSafety4DResources;
       function groupPermission : iSafety4DGroup;
+      function configurations : iSafety4DConfiguration;
       function userKey : iSafety4DUserKey;
       function getConfig (var aJson : TJsonObject ) : iSafety4D;
       function SaveToStorage ( aPath : String = '' ) : iSafety4D;
@@ -40,9 +44,17 @@ uses
   Safety4D.UserKey,
   System.SysUtils,
   System.Classes,
-  Rest.Json, Safety4D.Validation;
+  Rest.Json, Safety4D.Validation, Safety4D.Configuration;
 
 { TSafety4D }
+
+function TSafety4D.configurations: iSafety4DConfiguration;
+begin
+  if not Assigned(FConfigurations) then
+    FConfigurations := TSafety4DConfiguration.New(Self);
+
+  Result := FConfigurations;
+end;
 
 constructor TSafety4D.Create;
 begin
@@ -67,9 +79,9 @@ begin
   aResource := aJson.GetValue<TJsonObject>('resources');
   aGroup := aJson.GetValue<TJsonObject>('groupPermission');
   aUser := aJson.GetValue<TJsonObject>('userKeys');
-  FResources.getResource(aResource);
-  FGroupPermission.getGroups(aGroup);
-  FuserKey.getUserKey(aUser);
+  resources.getResource(aResource);
+  groupPermission.getGroups(aGroup);
+  userKey.getUserKey(aUser);
 end;
 
 function TSafety4D.groupPermission: iSafety4DGroup;
@@ -125,7 +137,7 @@ begin
   StrList := TStringList.Create;
   try
     Self.getConfig(aJsonResult);
-    StrList.Add(TJson.Format(aJsonResult));
+    StrList.Add(aJsonResult.Format);
     StrList.SaveToFile(aPath);
   finally
     StrList.DisposeOf;
@@ -162,8 +174,8 @@ var
 begin
   for I := 0 to Pred(aJson.Count) do
   begin
-    FGroupName := aJson.Get(I).JsonString.Value;
-    aJsonGroup := aJson.Get(I).JsonValue as TJsonObject;
+    FGroupName := aJson.Pairs[I].JsonString.Value;
+    aJsonGroup := aJson.Pairs[I].JsonValue as TJsonObject;
     aJsonActions := aJsonGroup.GetValue<TJsonArray>('Actions');
     aJsonNotActions := aJsonGroup.GetValue<TJsonArray>('NotActions');
 
@@ -177,14 +189,14 @@ begin
 
     for X := 0 to Pred(aJsonActions.Count) do
     begin
-      iAction.add(aJsonActions.Get(X).Value);
+      iAction.add(aJsonActions.Items[X].Value);
     end;
 
     iNotAction := iAction.&end.notActions;
 
     for X := 0 to Pred(aJsonNotActions.Count) do
     begin
-      iNotAction.add(aJsonNotActions.Get(X).Value);
+      iNotAction.add(aJsonNotActions.Items[X].Value);
     end;
   end;
 end;
@@ -203,12 +215,12 @@ var
 begin
   for I := 0 to Pred(aJson.Count) do
   begin
-    FGroupName := aJson.Get(I).JsonString.Value;
-    aJsonGroup := aJson.Get(I).JsonValue as TJSONObject;
+    FGroupName := aJson.Pairs[I].JsonString.Value;
+    aJsonGroup := aJson.Pairs[I].JsonValue as TJSONObject;
     for J := 0 to Pred(aJsonGroup.Count) do
     begin
-      FProviderName := aJsonGroup.Get(J).JsonString.Value;
-      aJsonProvider := aJsonGroup.Get(I).JsonValue as TJSONObject;
+      FProviderName := aJsonGroup.Pairs[J].JsonString.Value;
+      aJsonProvider := aJsonGroup.Pairs[I].JsonValue as TJSONObject;
       aJsonActions := aJsonProvider.GetValue<TJsonObject>('actions');
 
       iProviderAction :=
@@ -223,9 +235,9 @@ begin
       for K := 0 to Pred(aJsonActions.Count) do
       begin
         iProviderAction
-          .add(aJsonActions.Get(K).JsonString.Value)
-          .description(aJsonActions.Get(K).JsonValue.GetValue<String>('description'))
-          .errormsg(aJsonActions.Get(K).JsonValue.GetValue<String>('errormsg'))
+          .add(aJsonActions.Pairs[K].JsonString.Value)
+          .description(aJsonActions.Pairs[K].JsonValue.GetValue<String>('description'))
+          .errormsg(aJsonActions.Pairs[K].JsonValue.GetValue<String>('errormsg'))
       end;
     end;
   end;
@@ -242,8 +254,8 @@ var
 begin
   for I := 0 to Pred(aJson.Count) do
   begin
-    FGroupName := aJson.Get(I).JsonString.Value;
-    aJsonGroup := aJson.Get(I).JsonValue as TJsonObject;
+    FGroupName := aJson.Pairs[I].JsonString.Value;
+    aJsonGroup := aJson.Pairs[I].JsonValue as TJsonObject;
     aJsonPermission := aJsonGroup.GetValue<TJsonArray>('permissionGroups');
 
     iPermissionGroup :=
@@ -254,7 +266,7 @@ begin
 
     for X := 0 to Pred(aJsonPermission.Count) do
     begin
-      iPermissionGroup.addPermission(aJsonPermission.Get(X).Value);
+      iPermissionGroup.addPermission(aJsonPermission.Items[X].Value);
     end;
   end;
 end;

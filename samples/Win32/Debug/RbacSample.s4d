@@ -1,0 +1,63 @@
+{
+    "resources": {
+        "delphitohero": {
+            "users": {
+                "actions": {
+                    "read": {
+                        "description": "read-only",
+                        "errormsg": "not permit"
+                    },
+                    "write": {
+                        "description": "read-write",
+                        "errormsg": "not write data"
+                    },
+                    "delete": {
+                        "description": "delete-data",
+                        "errormsg": "not delete data"
+                    },
+                    "view": {
+                        "description": "view data",
+                        "errormsg": "not view data"
+                    }
+                }
+            }
+        }
+    },
+    "groupPermission": {
+        "{4D62E4C3-C73D-488A-8518-03A9545B5611}": {
+            "key": "Gerente",
+            "description": "Permiss�es completa de gest�o do Sistema",
+            "Actions": [
+                "users.write"
+            ],
+            "NotActions": [
+                "*"
+            ]
+        },
+        "{C188D1AB-EC28-4380-96E0-D1B13A29A8B3}": {
+            "key": "Comercial",
+            "description": "Permiss�es de Recursos Comerciais",
+            "Actions": [
+                "*"
+            ],
+            "NotActions": [
+                "users.delete",
+                "users.write"
+            ]
+        }
+    },
+    "userKeys": {
+        "{34C940ED-50E7-4CE3-B701-03CF1E15F28B}": {
+            "description": "Fulano de Tal",
+            "permissionGroups": [
+                "{4D62E4C3-C73D-488A-8518-03A9545B5611}"
+            ]
+        },
+        "{96B4C46F-0EBB-443B-B309-09C81844406E}": {
+            "description": "Beltrano",
+            "permissionGroups": [
+                "{C188D1AB-EC28-4380-96E0-D1B13A29A8B3}"
+            ]
+        }
+    }
+}

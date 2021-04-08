@@ -16,6 +16,7 @@ type
   iSafety4DGroup = interface;
   iSafety4DUserKey = interface;
   iSafety4DValidation = interface;
+  iSafety4DConfiguration = interface;
 
 
   iSafety4D = interface
@@ -23,10 +24,18 @@ type
     function Validation : iSafety4DValidation;
     function resources : iSafety4DResources;
     function groupPermission : iSafety4DGroup;
+    function configurations : iSafety4DConfiguration;
     function userKey : iSafety4DUserKey;
     function getConfig (var aJson : TJsonObject ) : iSafety4D;
     function SaveToStorage ( aPath : String = '' ) : iSafety4D;
     function LoadConfig ( aJson : TJsonObject ) : iSafety4D;
+  end;
+
+  iSafety4DConfiguration = interface
+    ['{E5561A2B-42D5-4A53-9EE6-57C1882C610D}']
+    function exceptions( aValue : Boolean ) : iSafety4DConfiguration; overload;
+    function exceptions : boolean; overload;
+    function &end : iSafety4D;
   end;
 
   iSafety4DValidation = interface

@@ -50,13 +50,6 @@ begin
   Result := Self;
   FProviderName := aValue;
   FProviderNameList.Add(aValue, TSafety4DResourcesGroupProviderActions.New(Self));
-//  FProviderNameList
-//    .Items[aValue]
-//      .add('*')
-//      .add('read')
-//      .add('write')
-//      .add('delete')
-//      .add('view');
 end;
 
 constructor TSafety4DResourcesGroupProvider.Create(aParent : iSafety4DResourcesGroup);

@@ -12,7 +12,7 @@ uses
   Vcl.Controls,
   Vcl.Forms,
   Vcl.Dialogs,
-  Vcl.StdCtrls;
+  Vcl.StdCtrls, Vcl.ExtCtrls;
 
 type
   TForm1 = class(TForm)
@@ -25,8 +25,13 @@ type
     Button5: TButton;
     Button6: TButton;
     Button7: TButton;
+    GroupBox1: TGroupBox;
+    edtUserKey: TLabeledEdit;
+    edtApplication: TLabeledEdit;
+    edtResource: TLabeledEdit;
+    edtAction: TLabeledEdit;
     Button8: TButton;
-    Edit1: TEdit;
+    Button9: TButton;
     procedure GetResourcesClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -42,6 +47,8 @@ type
     procedure _GetResources;
     procedure _GetGroupsPermissions;
     procedure _GetUserKeys;
+    procedure __ReloadConfig;
+    procedure __ReWriteMemoConfig;
   public
     { Public declarations }
   end;
@@ -71,7 +78,7 @@ begin
         .getGroups(aJsonSafety4D);
 
     Memo1.Lines.Clear;
-    Memo1.Lines.Add(TJson.Format(aJsonSafety4D));
+    Memo1.Lines.Add(aJsonSafety4D.Format);
   finally
     aJsonSafety4D.Free;
   end;
@@ -90,7 +97,7 @@ begin
         .getResource(aJsonSafety4D);
 
     Memo1.Lines.Clear;
-    Memo1.Lines.Add(TJson.Format(aJsonSafety4D));
+    Memo1.Lines.Add(aJsonSafety4D.Format);
   finally
     aJsonSafety4D.Free;
   end;
@@ -108,66 +115,44 @@ begin
         .getUserKey(aJsonSafety4D);
 
     Memo1.Lines.Clear;
-    Memo1.Lines.Add(TJson.Format(aJsonSafety4D));
+    Memo1.Lines.Add(aJsonSafety4D.Format);
   finally
     aJsonSafety4D.Free;
+  end;
+end;
+
+procedure TForm1.__ReloadConfig;
+var
+  aJson : TJsonObject;
+begin
+  vSafety4D := nil;
+  aJson := TJSONObject.ParseJSONValue(Memo1.Lines.Text) as TJsonObject;
+  try
+    TSafety4D
+    .New
+      .LoadConfig(aJson);
+  finally
+    aJson.Free;
+  end;
+end;
+
+procedure TForm1.__ReWriteMemoConfig;
+var
+  aJsonConfig : TJsonObject;
+begin
+  Memo1.Lines.Clear;
+  aJsonConfig := TJsonObject.Create;
+  try
+    TSafety4D.New.getConfig(aJsonConfig);
+    Memo1.Lines.Add(aJsonConfig.Format);
+  finally
+    aJsonConfig.Free;
   end;
 end;
 
 procedure TForm1.GetResourcesClick(Sender: TObject);
 begin
   _GetResources;
-
-  {*
-    TRbac4D
-    .New
-
-      //Como registrar os recursos
-      //Default Resource [view, read, write, delete, action]
-
-      //<sGroup, TDictionary<sProviderName, TDictionary<sActions, string>>>;
-
-
-
-
-      //Buscar grupo de permissões
-      TRbac4D
-        .New
-          .getFunctionDefinitions; //TArray<TFunctionDefinition>
-
-
-      //Busar Resources
-      TRbac4D
-        .New
-          .getResourcesGroup('GroupName'); //TArray<TResourcesGroupName>
-
-
-      //Como validar o acesso a um recurso
-      TRbac4D
-        .New
-          .validateAccess
-            .roleName('operador')
-            .group('housex')
-            .provider('user')
-            .resource('Actions.getSaldo')
-          .Execute; //Boolean
-
-
-      //Atribuir as Roles na instancia global
-      TRbac4D
-        .New
-          .roleName('operador|marketing|gerente');
-
-
-      TRbac4D
-        .New
-          .loadConfiguration(aJsonString);
-
-      TRbac4D
-        .New
-          .saveConfiguration; //Retorna JsonString;
-
-  *}
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -228,7 +213,7 @@ begin
     TSafety4D.New.getConfig(aJsonSafety4D);
 
     Memo1.Lines.Clear;
-    Memo1.Lines.Add(TJson.Format(aJsonSafety4D));
+    Memo1.Lines.Add(aJsonSafety4D.Format);
   finally
     aJsonSafety4D.Free;
   end;
@@ -237,7 +222,35 @@ end;
 
 procedure TForm1.Button4Click(Sender: TObject);
 begin
-  RegisterResources;
+  TSafety4D
+  .New
+    .resources
+      .registerResources
+        .resourcesGroupName
+          .add('newapplication')
+          .providerName
+            .add('users')
+            .actions
+              .add('read')
+                .description('read-only')
+                .errormsg('not permit')
+              .&end
+              .add('write')
+                .description('read-write')
+                .errormsg('not write data')
+              .&end
+              .add('delete')
+                .description('delete-data')
+                .errormsg('not delete data')
+              .&end
+              .add('view')
+                .description('view data')
+                .errormsg('not view data')
+              .&end
+            .&end
+          .&end;
+
+  __ReWriteMemoConfig;
 end;
 
 procedure TForm1.Button5Click(Sender: TObject);
@@ -266,13 +279,17 @@ end;
 
 procedure TForm1.Button8Click(Sender: TObject);
 begin
+  __ReloadConfig;
   try
     TSafety4D.New
+    .configurations
+      .exceptions(True)
+    .&end
     .Validation
-      .userKey('{34C940ED-50E7-4CE3-B701-03CF1E15F28B}')
-      .application('delphitohero')
-      .resource('users')
-      .action(edit1.Text)
+      .userKey(edtUserKey.Text)
+      .application(edtApplication.Text)
+      .resource(edtResource.Text)
+      .action(edtAction.Text)
     .validate;
     ShowMessage('Usuario Autorizado');
   except on e : Exception do
@@ -282,36 +299,7 @@ end;
 
 procedure TForm1.RegisterResources;
 begin
-  TSafety4D
-  .New
-    .resources
-      .registerResources
-        .resourcesGroupName
-          .add('delphitohero')
-          .providerName
-            .add('users')
-            .actions
-              .add('read')
-                .description('read-only')
-                .errormsg('not permit')
-              .&end
-              .add('write')
-                .description('read-write')
-                .errormsg('not write data')
-              .&end
-              .add('delete')
-                .description('delete-data')
-                .errormsg('not delete data')
-              .&end
-              .add('view')
-                .description('view data')
-                .errormsg('not view data')
-              .&end
-            .&end
-          .&end
-        .&end
-      .&end
-    .&end;
+  
 end;
 
 end.
