@@ -358,8 +358,6 @@ begin
   aJsonSafety4D := TJSONObject.Create;
   try
     TSafety4D.New.getConfig(aJsonSafety4D);
-
-    Memo1.Lines.Clear;
     Memo1.Lines.Add(aJsonSafety4D.Format);
   finally
     aJsonSafety4D.Free;
