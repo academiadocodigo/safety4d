@@ -255,3 +255,21 @@ begin
       .action('write')
     .validate;
  ```
+
+#### Exceptions
+
+A função validade retorna um boolean sinalizando se o acesso é permitido ou não, porém você pode tratar a permissão fazendo com que o TSafety4D dispare uma excessão com a mensagem do que falhou na validação, não necessitando assim de estrutura condicional para validar o acesso.
+
+```delphi
+  TSafety4D.New
+    .configurations
+      .exceptions(True)
+    .&end
+    .Validation
+      .userKey('{34C940ED-50E7-4CE3-B701-03CF1E15F28B}')
+      .application('safety4d')
+      .resource('users')
+      .action('write')
+    .validate;
+ ```
+
