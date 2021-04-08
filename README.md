@@ -355,3 +355,7 @@ Você pode utilizar o recursos abaixo para salvar as configurações diretamente
 ```delphi
 TSafety4D.New.SaveToStorage();
 ```
+
+## Dica
+
+Crie a estrutura e salve ela no seu banco de dados em um campo de texto e carregue toda vez que abrir a aplicação ou tiver alguma mudança nas configurações para o componente.
