@@ -256,6 +256,26 @@ begin
     .validate;
  ```
 
+O <b>Safety4D</b> trabalha com uma instancia Singleton, ou seja, a mesma instancia é compartilhada em toda a aplicação, com isso algumas configurações você pode deixar por default como por exemplo <b>userKey e application</b> que provavelmente não irão mudar em uma sessão de usuário durante o uso.
+
+Sendo assim você pode por exemplo na instancia principal da sua aplicação já deixar esses valores setados.
+
+```delphi
+ TSafety4D.New
+   .Validation
+     .userKey('{34C940ED-50E7-4CE3-B701-03CF1E15F28B}')
+     .application('safety4d');
+```
+
+E durante o uso nas demais telas você não precisa mais passar essas informações para realizar a validação de um recurso.
+
+```delphi
+TSafety4D.New
+   .Validation
+     .resource('users')
+     .action('write')
+   .validate;
+```
 ### Exceptions
 
 A função validade retorna um boolean sinalizando se o acesso é permitido ou não, porém você pode tratar a permissão fazendo com que o TSafety4D dispare uma excessão com a mensagem do que falhou na validação, não necessitando assim de estrutura condicional para validar o acesso.
