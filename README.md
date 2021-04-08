@@ -36,7 +36,9 @@ Safety4D
 
 O Safety4D foi baseado no conceito de RBAC ( role-based access control) https://pt.wikipedia.org/wiki/Controle_de_acesso_baseado_em_fun%C3%A7%C3%B5es
 
-Ele se baseia em uma estrutura JSON de configuração para definição das permissões.
+Ele se baseia em uma estrutura JSON de configuração para definição das permissões, inspirada na estrutura utilizada pelo Windows Azure. 
+
+https://docs.microsoft.com/pt-br/azure/role-based-access-control/overview
 
 Abaixo o exemplo de um arquivo de configuração
 
@@ -106,4 +108,45 @@ Abaixo o exemplo de um arquivo de configuração
 }
 ```
 
+## Explicando a Estrutura
 
+Abaixo vou detalhar cada bloco do JSON acima explicando o objetivo e a aplicação de cada recurso.
+
+
+### Resources
+
+Neste bloco você vai cadastrar a sua aplicação, os recursos dela e as ações que você deseja validar.
+
+```JSON
+"resources": {
+        "safety4d": {
+            "users": {
+                "actions": {
+                    "read": {
+                        "description": "read-only",
+                        "errormsg": "not permit"
+                    },
+                    "write": {
+                        "description": "read-write",
+                        "errormsg": "not write data"
+                    },
+                    "delete": {
+                        "description": "delete-data",
+                        "errormsg": "not delete data"
+                    },
+                    "view": {
+                        "description": "view data",
+                        "errormsg": "not view data"
+                    }
+                }
+            }
+        }
+    },
+```
+
+No exemplo acima, estamos cadastrando a aplicação chamada <b>safety4d</b>, o recursos chamados <b>users</b> e as ações disponíveis neste recurso <b> read, write, delete, view </b>. 
+
+<br>
+
+Você pode cadastrar quantas ações desejar para um recurso.
+ 
