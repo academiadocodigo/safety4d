@@ -145,8 +145,66 @@ Neste bloco você vai cadastrar a sua aplicação, os recursos dela e as ações
 ```
 
 No exemplo acima, estamos cadastrando a aplicação chamada <b>safety4d</b>, o recursos chamados <b>users</b> e as ações disponíveis neste recurso <b> read, write, delete, view </b>. 
-
-<br>
-
 Você pode cadastrar quantas ações desejar para um recurso.
+
+### Group Permission
+
+Neste bloco você cria os grupos de permissão que serão atribuidos aos usuários, definindo quais recursos e actions podem e não podem ser acessados pelos usuários do grupo.
+
+No bloco <b>Actions</b> você define todos os recursos e actions que os participantes do grupo terão acesso, e no bloco <b>NotActions</b> você define todos os recursos e actions que estarão bloqueados para os participantes do grupo.
+
+Utilizando o caracter <b>"*"</b> no bloco <b>Actions</b> você está liberando o acesso a todos os recursos exceto aqueles que estiverem especificados na sessão <b>NotActions</b>.
+
+Utilizando o caracter <b>"*"</b> no bloco <b>NotActions</b> você está bloqueando o acesso a todos os recursos exceto aqueles que estiverem especificados na sessão <b>Actions</b>.
+
+```JSON
+ "groupPermission": {
+        "{4D62E4C3-C73D-488A-8518-03A9545B5611}": {
+            "key": "Gerente",
+            "description": "Permissoes completa de gestao do Sistema",
+            "Actions": [
+                "users.write"
+            ],
+            "NotActions": [
+                "*"
+            ]
+        },
+        "{C188D1AB-EC28-4380-96E0-D1B13A29A8B3}": {
+            "key": "Comercial",
+            "description": "Permissoes de Recursos Comerciais",
+            "Actions": [
+                "*"
+            ],
+            "NotActions": [
+                "users.delete",
+                "users.write"
+            ]
+        }
+    },
+```
+
+No exemplo acima cadastramos 2 grupos de permissões distindos, no primeiro grupo <b>Gerente</b> definimos em <b>Actions</b> que os participantes desse grupo só podem acessar o recurso <b>users</b> executando a ação <b>write</b> e o caracter <b>"*"</b> na sessão <b>NotActions</b> sinaliza que todas as demais funções estão bloqueadas.
+
+No segundo grupo todas as <b>Actions</b> estão liberadas, exceto as que estão descritas no bloco <b>NotActions</b>.
  
+
+ ### User Keys
+
+ Neste bloco você cadastra as chaves referentes aos usuários do sistema, atribuindo a eles as keys dos Grupos de Permissões que ele participa.
+
+ ```JSON
+  "userKeys": {
+        "{34C940ED-50E7-4CE3-B701-03CF1E15F28B}": {
+            "description": "Fulano de Tal",
+            "permissionGroups": [
+                "{4D62E4C3-C73D-488A-8518-03A9545B5611}"
+            ]
+        },
+        "{96B4C46F-0EBB-443B-B309-09C81844406E}": {
+            "description": "Beltrano",
+            "permissionGroups": [
+                "{C188D1AB-EC28-4380-96E0-D1B13A29A8B3}"
+            ]
+        }
+    }
+ ```
