@@ -208,3 +208,50 @@ No segundo grupo todas as <b>Actions</b> estão liberadas, exceto as que estão 
         }
     }
  ```
+
+ ## Utilizando no Delphi
+
+ Você pode utilizar os recursos do proprio componente para criar seu arquivo de configuração ou criar manualmente e carrega-lo no componentes.
+
+ ### Carregando um JSON já pronto
+
+ ```delphi
+ var
+  aJson : TJsonObject;
+begin
+  aJson := TJSONObject.ParseJSONValue('SEU JSON') as TJsonObject;
+  try
+    TSafety4D
+    .New
+      .LoadConfig(aJson);
+  finally
+    aJson.Free;
+  end;
+ ```
+
+ Uma vez estando com as configurações do arquivo carregadas no componente TSafety4D, você pode utilizar os recursos de validação.
+
+
+ ### Validando o acesso a um recursos
+
+ ```delphi
+ TSafety4D.New
+    .Validation
+      .userKey('CHAVE DO USERKEY')
+      .application('APPLICATION DO RECURSO')
+      .resource('NOME DO RECURSOS')
+      .action('ACTION A SER EXECUTADA')
+    .validate;
+ ``` 
+
+ Abaixo o exemplo utilizando os dados do arquivo de configuração que mostramos acima, verificando se um usuário especifico possuí a permissão para escrever no recurso de <b>users</b>.
+
+ ```delphi
+  TSafety4D.New
+    .Validation
+      .userKey('{34C940ED-50E7-4CE3-B701-03CF1E15F28B}')
+      .application('safety4d')
+      .resource('users')
+      .action('write')
+    .validate;
+ ```
