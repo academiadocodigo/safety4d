@@ -275,6 +275,8 @@ A função validade retorna um boolean sinalizando se o acesso é permitido ou n
 
 ## Definindo as Configurações pelo Sistema
 
+Você pode criar o arquivo de configuração manualmente e carrega-lo no componente ou utilizar o proprio componente para definir as configurações.
+
 ```delphi
 TSafety4D
   .New
@@ -325,4 +327,31 @@ TSafety4D
           .&end
         .&end
       .&end;
+```
+
+### Transformando as configuração do Componente em Json
+
+Utilizando o código abaixo você carrega toda a configuração do componentes para um TJsonObject.
+
+```delphi
+var
+  aJsonSafety4D : TJsonObject;
+begin
+  aJsonSafety4D := TJSONObject.Create;
+  try
+    TSafety4D.New.getConfig(aJsonSafety4D);
+
+    Memo1.Lines.Clear;
+    Memo1.Lines.Add(aJsonSafety4D.Format);
+  finally
+    aJsonSafety4D.Free;
+  end;
+```
+
+### Salvando a configuração em um Arquivo no Disco
+
+Você pode utilizar o recursos abaixo para salvar as configurações diretamente no disco.
+
+```delphi
+TSafety4D.New.SaveToStorage();
 ```
