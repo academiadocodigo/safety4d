@@ -17,6 +17,10 @@
 # Safety4D
 Framework para Controle de Regras de Acesso de Usuários inspirado no conceito RBAC.
 
+
+### About the name
+This is called safety and not security intentionally because its creator wanted it that way.
+
 ## Instalação
 Basta registrar no Library Path do seu Delphi o caminho da pasta SRC da Biblioteca ou utilizar o Boss (https://github.com/HashLoad/boss) para facilitar ainda mais, executando o comando 
 
