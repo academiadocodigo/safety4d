@@ -217,6 +217,11 @@ begin
   begin
     FGroupName := aJson.Pairs[I].JsonString.Value;
     aJsonGroup := aJson.Pairs[I].JsonValue as TJSONObject;
+    resources
+      .registerResources
+         .resourcesGroupName
+            .add(FGroupName);
+      
     for J := 0 to Pred(aJsonGroup.Count) do
     begin
       FProviderName := aJsonGroup.Pairs[J].JsonString.Value;
@@ -227,7 +232,6 @@ begin
         resources
         .registerResources
           .resourcesGroupName
-            .add(FGroupName)
             .providerName
               .add(FProviderName)
               .actions;

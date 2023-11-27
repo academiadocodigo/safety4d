@@ -45,6 +45,10 @@ function TSafety4DResourcesGroup.add(
 begin
   Result := Self;
   FResourceGroup := aValue;
+
+  if FResourceGroupNameList.ContainsKey(aValue) then
+    Exit;
+  
   FResourceGroupNameList.Add(aValue, TSafety4DResourcesGroupProvider.New(Self));
 end;
 
